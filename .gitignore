@@ -1,0 +1,8 @@
+.DS_Store
+__MACOSX
+*.xcworkspace
+!default.xcworkspace
+xcuserdata
+profile
+DerivedData
+Build/
