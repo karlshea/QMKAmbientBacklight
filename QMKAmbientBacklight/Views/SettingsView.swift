@@ -27,6 +27,15 @@ struct SettingsView: View {
     }
     
     private var settingsControls: some View {
+        var luxMaxProxy: Binding<Float> {
+                Binding<Float>(
+                    get: { Float(settings.luxValueConsideredMaximum) },
+                    set: {
+                        settings.luxValueConsideredMaximum = Int($0)
+                    }
+                )
+            }
+        
         var minLevelProxy: Binding<Float> {
                 Binding<Float>(
                     get: { Float(settings.minimumLevel) },
@@ -36,6 +45,17 @@ struct SettingsView: View {
                 )
             }
         
+        var maxLevelProxy: Binding<Float> {
+                Binding<Float>(
+                    get: { Float(settings.maximumLevel) },
+                    set: {
+                        settings.maximumLevel = UInt8($0)
+                    }
+                )
+            }
+        
+        let evaluator = QABBacklightLevelEvaluator(adjustments: settings.currentKeyboardAdjustments)
+        
         return VStack(alignment: .leading, spacing: 32) {
             Toggle(
                 "Launch at Login",
@@ -43,38 +63,70 @@ struct SettingsView: View {
             )
             
             Group {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("Vendor ID")
-                    TextField("Vendor ID", text: $settings.keyboardVendorId)
-                        
-                }
-                
-                HStack(alignment: .firstTextBaseline) {
-                    Text("Product ID")
-                    TextField("Product ID", text: $settings.keyboardProductId)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Vendor ID")
+                        TextField("Vendor ID", text: $settings.keyboardVendorId)
+                            
+                    }
+                    
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Product ID")
+                        TextField("Product ID", text: $settings.keyboardProductId)
+                    }
                 }
             }
             
             Group {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Minimum backlight level:")
-                    
+                    Text("Lux considered maximum:")
                 
                     HStack(alignment: .firstTextBaseline) {
-                        Slider(value: minLevelProxy, in: 0...255, step: 1)
+                        Slider(value: luxMaxProxy, in: 0...2000)
+                            .frame(maxWidth: 300)
+                        Text("\(settings.luxValueConsideredMaximum)")
+                            .font(Font.system(size: 12, weight: .medium).monospacedDigit())
+                    }
+                    
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Current Ambient Light Lux:")
+                        Text("\(reader.ambientLightValue.formattedNoFractionDigits)")
+                            .font(Font.system(size: 12).monospacedDigit())
+                    }
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(NSColor.secondaryLabelColor))
+                }
+            }
+                
+            Group {
+                VStack(alignment: .leading, spacing: 2) {
+                
+                    Text("Minimum backlight level:")
+                    
+                    HStack(alignment: .firstTextBaseline) {
+                        Slider(value: minLevelProxy, in: 0...255)
                             .frame(maxWidth: 300)
                         Text("\(settings.minimumLevel)")
                             .font(Font.system(size: 12, weight: .medium).monospacedDigit())
                     }
+                    
+                    Text("Maximum backlight level:")
+                    
+                    HStack(alignment: .firstTextBaseline) {
+                        Slider(value: maxLevelProxy, in: 0...255)
+                            .frame(maxWidth: 300)
+                        Text("\(settings.maximumLevel)")
+                            .font(Font.system(size: 12, weight: .medium).monospacedDigit())
+                    }
+                    
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("Current Keyboard Level:")
+                        Text("\(evaluator.determineLevelForLux(reader.ambientLightValue))")
+                            .font(Font.system(size: 12).monospacedDigit())
+                    }
+                    .font(.system(size: 12))
+                    .foregroundColor(Color(NSColor.secondaryLabelColor))
                 }
-
-                HStack(alignment: .firstTextBaseline) {
-                    Text("Current Ambient Light Level:")
-                    Text("\(reader.ambientLightValue.formattedNoFractionDigits)")
-                        .font(Font.system(size: 12).monospacedDigit())
-                }
-                .font(.system(size: 12))
-                .foregroundColor(Color(NSColor.secondaryLabelColor))
             }
         }
     }

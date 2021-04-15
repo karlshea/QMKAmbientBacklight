@@ -17,6 +17,9 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
     let reader: QABAmbientLightSensorReader
     var keyboardMonitor: QABKeyboardMonitor?
     
+    private var currentKeyboardSettings: QABKeyboardSettings
+    private var currentKeyboardAdjustments: QABKeyboardAdjustments
+    
     private var cancellables = Set<AnyCancellable>()
     
     public init(settings: QABSettings,
@@ -24,6 +27,9 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
     {
         self.settings = settings
         self.reader = reader
+        
+        self.currentKeyboardSettings = settings.currentKeyboardSettings
+        self.currentKeyboardAdjustments = settings.currentKeyboardAdjustments
     }
     
     public func activate() {
@@ -32,17 +38,21 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
         }.store(in: &cancellables)
     
         settings.$currentKeyboardSettings.sink { [weak self] newValue in
-            self?.initializeKeyboardMonitor(keyboardSettings: newValue)
+            self?.currentKeyboardSettings = newValue
+            self?.initializeKeyboardMonitor()
         }.store(in: &cancellables)
         
-        settings.$minimumLevel.sink { [weak self] _ in
+        settings.$currentKeyboardAdjustments.sink { [weak self] newValue in
+            self?.currentKeyboardAdjustments = newValue
             self?.reset()
         }.store(in: &cancellables)
         
         reader.activate()
     }
 
-    private func initializeKeyboardMonitor(keyboardSettings: QABKeyboardSettings) {
+    private func initializeKeyboardMonitor() {
+        let keyboardSettings = self.currentKeyboardSettings
+        
         guard let vendorId = UInt16(keyboardSettings.vendorId, radix: 16), let productId = UInt16(keyboardSettings.productId, radix: 16) else {
             return
         }
@@ -80,17 +90,9 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
     }
     
     private func evaluateAmbientLight(with value: Double) {
-    
-        // Max seems to be around 2,000 but it'll never be that bright.
-        // Reasonable seems to be around 300 for max brightness?
-        // Levels are 255 (8 bits)
+        let evaluator = QABBacklightLevelEvaluator(adjustments: self.currentKeyboardAdjustments)
         
-        let clamped = min(max(value, 0), 300)
-        let ratio = round((clamped / 300) * 255)
-        let newLevel = UInt8(ratio > Double(UInt8.max) ? Double(UInt8.max) : ratio)
-        let adjustedLevel = newLevel < settings.minimumLevel ? UInt8(settings.minimumLevel) : newLevel
-        
-        setKeyboardBacklightLevel(adjustedLevel)
+        setKeyboardBacklightLevel(evaluator.determineLevelForLux(value))
     }
     
     private func setKeyboardBacklightLevel(_ value: UInt8) {

@@ -14,12 +14,15 @@ public final class QABSettings: ObservableObject {
     public let keyboardUsage: UInt8 = 0x61
     
     @Published public var currentKeyboardSettings: QABKeyboardSettings
+    @Published public var currentKeyboardAdjustments: QABKeyboardAdjustments
     
     private struct Keys {
         static let hasLaunchedAppBefore = "hasLaunchedAppBefore"
         static let keyboardVendorId = "keyboardVendorId"
         static let keyboardProductId = "keyboardProductId"
         static let minimumLevel = "minimumLevel"
+        static let maximumLevel = "maximumLevel"
+        static let luxValueConsideredMaximum = "luxValueConsideredMaximum"
     }
     
     private let defaults: UserDefaults
@@ -33,11 +36,21 @@ public final class QABSettings: ObservableObject {
         defaults.register(defaults: [
             Keys.keyboardVendorId: String(0x4B42, radix: 16),
             Keys.keyboardProductId: String(0x6061, radix: 16),
-            Keys.minimumLevel: 20
+            Keys.minimumLevel: 20,
+            Keys.maximumLevel: 255,
+            Keys.luxValueConsideredMaximum: 500,
         ])
         
         self.hasLaunchedAppBefore = defaults.bool(forKey: Keys.hasLaunchedAppBefore)
-        self.minimumLevel = UInt8(defaults.integer(forKey: Keys.minimumLevel))
+        
+        let minimumLevel = UInt8(defaults.integer(forKey: Keys.minimumLevel))
+        self.minimumLevel = minimumLevel
+        
+        let maximumLevel = UInt8(defaults.integer(forKey: Keys.maximumLevel))
+        self.maximumLevel = maximumLevel
+        
+        let luxValueConsideredMaximum = defaults.integer(forKey: Keys.luxValueConsideredMaximum)
+        self.luxValueConsideredMaximum = luxValueConsideredMaximum
         
         let vendorId = defaults.string(forKey: Keys.keyboardVendorId) ?? ""
         self.keyboardVendorId = vendorId
@@ -46,6 +59,7 @@ public final class QABSettings: ObservableObject {
         self.keyboardProductId = productId
         
         self.currentKeyboardSettings = QABKeyboardSettings(vendorId: vendorId, productId: productId)
+        self.currentKeyboardAdjustments = QABKeyboardAdjustments(minimumLevel: minimumLevel, maximumLevel: maximumLevel, luxValueConsideredMaximum: luxValueConsideredMaximum)
         
         if isPreviewing {
             self.isLaunchAtLoginEnabled = false
@@ -73,6 +87,27 @@ public final class QABSettings: ObservableObject {
                 minimumLevel,
                 forKey: Keys.minimumLevel
             )
+            currentKeyboardAdjustments.minimumLevel = minimumLevel
+        }
+    }
+    
+    @Published public var maximumLevel: UInt8 {
+        didSet {
+            defaults.set(
+                maximumLevel,
+                forKey: Keys.maximumLevel
+            )
+            currentKeyboardAdjustments.maximumLevel = maximumLevel
+        }
+    }
+    
+    @Published public var luxValueConsideredMaximum: Int {
+        didSet {
+            defaults.set(
+                luxValueConsideredMaximum,
+                forKey: Keys.luxValueConsideredMaximum
+            )
+            currentKeyboardAdjustments.luxValueConsideredMaximum = luxValueConsideredMaximum
         }
     }
     
