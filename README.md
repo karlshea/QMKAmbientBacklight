@@ -8,7 +8,7 @@ Automatically set your keyboard's backlight based on your Mac's ambient light se
 
 Your keyboard must be running the [QMK](https://qmk.fm/) firmware, with the following additional requirements:
 
- * A decent number of levels set for `BACKLIGHT_LEVELS` in your `config.h` (e.g. 10-20 or more)
+ * A decent number of levels set for `BACKLIGHT_LEVELS` in your `config.h` (e.g. 10–20 or more)
 
 ### And Either
 
@@ -18,6 +18,10 @@ Your keyboard must be running the [QMK](https://qmk.fm/) firmware, with the foll
 
  * `RAW_ENABLE = yes` in your `rules.mk`
  * The contents of [example-keymap.c](./example-keymap.c) included in your `keymap.c`
+
+## Instructions
+
+The application will monitor the ambient light sensor and send a backlight value to the firmware in the range 0–255. Either VIA or a handler in `raw_hid_receive()` will map that range into the range set for `BACKLIGHT_LEVELS` in your keymap's `config.h`.
 
 ## Acknowledgements
 
