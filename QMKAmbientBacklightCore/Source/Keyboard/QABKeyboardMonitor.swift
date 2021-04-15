@@ -26,7 +26,9 @@ open class QABKeyboardMonitor {
             guard let keyboard = keyboard else {
                 return
             }
-            keyboard.setBacklightLevel(requestedBacklightLevel)
+            DispatchQueue.global().async {
+                keyboard.setBacklightLevel(self.requestedBacklightLevel)
+            }
         }
     }
     
@@ -68,8 +70,10 @@ open class QABKeyboardMonitor {
         let device = HIDDevice(device: inIOHIDDeviceRef)
         os_log("Keyboard %{public}@ found", log: log, type: .debug, device.name)
         
-        keyboard = QABKeyboard(device)
-        keyboard?.setBacklightLevel(requestedBacklightLevel)
+        DispatchQueue.global().async {
+            self.keyboard = QABKeyboard(device)
+            self.keyboard?.setBacklightLevel(self.requestedBacklightLevel)
+        }
     }
     
     open func rawDeviceRemoved(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, inIOHIDDeviceRef: IOHIDDevice!) {

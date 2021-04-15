@@ -40,6 +40,7 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
         settings.$currentKeyboardSettings.sink { [weak self] newValue in
             self?.currentKeyboardSettings = newValue
             self?.initializeKeyboardMonitor()
+            self?.reset()
         }.store(in: &cancellables)
         
         settings.$currentKeyboardAdjustments.sink { [weak self] newValue in
