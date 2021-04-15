@@ -24,6 +24,8 @@
 		CB3D5FB926255794004C824F /* QABKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3D5FB826255794004C824F /* QABKeyboard.swift */; };
 		CB3D5FBD262558A5004C824F /* USBDeviceSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CB3D5FBC262558A5004C824F /* USBDeviceSwift */; };
 		CBED3A4A2627DDF000397C48 /* QABKeyboardSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBED3A492627DDF000397C48 /* QABKeyboardSettings.swift */; };
+		CBED3A4F2627FB5600397C48 /* SharedFileList.m in Sources */ = {isa = PBXBuildFile; fileRef = CBED3A4D2627FB5600397C48 /* SharedFileList.m */; };
+		CBED3A502627FB5600397C48 /* SharedFileList.h in Headers */ = {isa = PBXBuildFile; fileRef = CBED3A4E2627FB5600397C48 /* SharedFileList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CBF6F6B02627A7DF008CD8E6 /* QABKeyboardMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBF6F6AF2627A7DF008CD8E6 /* QABKeyboardMonitor.swift */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +73,8 @@
 		CB3D5FB32625440C004C824F /* QABKeyboardBacklightUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboardBacklightUpdater.swift; sourceTree = "<group>"; };
 		CB3D5FB826255794004C824F /* QABKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboard.swift; sourceTree = "<group>"; };
 		CBED3A492627DDF000397C48 /* QABKeyboardSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboardSettings.swift; sourceTree = "<group>"; };
+		CBED3A4D2627FB5600397C48 /* SharedFileList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedFileList.m; sourceTree = "<group>"; };
+		CBED3A4E2627FB5600397C48 /* SharedFileList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedFileList.h; sourceTree = "<group>"; };
 		CBF6F6AF2627A7DF008CD8E6 /* QABKeyboardMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboardMonitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,6 +139,7 @@
 		CB3D5F6426252EF3004C824F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				CBED3A4C2627FB3900397C48 /* Utilities */,
 				CB3D5FB22625439C004C824F /* Keyboard */,
 				CB3D5F6526252F0F004C824F /* AmbientLight */,
 				CB3D5FA2262534EC004C824F /* Storage */,
@@ -209,6 +214,15 @@
 			path = Keyboard;
 			sourceTree = "<group>";
 		};
+		CBED3A4C2627FB3900397C48 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				CBED3A4E2627FB5600397C48 /* SharedFileList.h */,
+				CBED3A4D2627FB5600397C48 /* SharedFileList.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -217,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB3D5F5426252EBC004C824F /* QMKAmbientBacklightCore.h in Headers */,
+				CBED3A502627FB5600397C48 /* SharedFileList.h in Headers */,
 				CB3D5F692625302D004C824F /* QABAmbientLightSensor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -334,6 +349,7 @@
 				CBED3A4A2627DDF000397C48 /* QABKeyboardSettings.swift in Sources */,
 				CB3D5FB926255794004C824F /* QABKeyboard.swift in Sources */,
 				CB3D5F702625305D004C824F /* QABAmbientLightSensor.m in Sources */,
+				CBED3A4F2627FB5600397C48 /* SharedFileList.m in Sources */,
 				CB3D5F6D26253047004C824F /* QABAmbientLightSensorReader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

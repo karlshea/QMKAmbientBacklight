@@ -18,3 +18,4 @@ FOUNDATION_EXPORT const unsigned char QMKAmbientBacklightCoreVersionString[];
 #define kQMKAmbientBacklightCoreSubsystemName "com.weilstreet.QMKAmbientBacklightCore"
 
 #import <QMKAmbientBacklightCore/QABAmbientLightSensor.h>
+#import <QMKAmbientBacklightCore/SharedFileList.h>

@@ -37,6 +37,10 @@ struct SettingsView: View {
             }
         
         return VStack(alignment: .leading, spacing: 32) {
+            Toggle(
+                "Launch at Login",
+                isOn: $settings.isLaunchAtLoginEnabled
+            )
             
             Group {
                 HStack(alignment: .firstTextBaseline) {

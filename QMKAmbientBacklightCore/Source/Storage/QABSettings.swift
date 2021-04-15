@@ -46,6 +46,16 @@ public final class QABSettings: ObservableObject {
         self.keyboardProductId = productId
         
         self.currentKeyboardSettings = QABKeyboardSettings(vendorId: vendorId, productId: productId)
+        
+        if isPreviewing {
+            self.isLaunchAtLoginEnabled = false
+        } else {
+            self.isLaunchAtLoginEnabled = Self.isAppInLoginItems
+            
+            SharedFileList.sessionLoginItems().changeHandler = { [weak self] _ in
+                self?.updateLaunchAtLoginEnabled()
+            }
+        }
     }
     
     @Published public var hasLaunchedAppBefore: Bool {
@@ -83,6 +93,32 @@ public final class QABSettings: ObservableObject {
                 forKey: Keys.keyboardProductId
             )
             currentKeyboardSettings.productId = keyboardVendorId
+        }
+    }
+    
+    // MARK: - Launch at login
+    
+    private static var isAppInLoginItems: Bool {
+        SharedFileList.sessionLoginItems().containsItem(Self.appURL)
+    }
+    
+    private func updateLaunchAtLoginEnabled() {
+        isLaunchAtLoginEnabled = Self.isAppInLoginItems
+    }
+    
+    private static var appURL: URL { Bundle.main.bundleURL }
+    
+    @Published public var isLaunchAtLoginEnabled: Bool {
+        didSet {
+            guard !isPreviewing else { return }
+
+            guard isLaunchAtLoginEnabled != oldValue else { return }
+
+            if isLaunchAtLoginEnabled {
+                SharedFileList.sessionLoginItems().addItem(Self.appURL)
+            } else {
+                SharedFileList.sessionLoginItems().removeItem(Self.appURL)
+            }
         }
     }
 
