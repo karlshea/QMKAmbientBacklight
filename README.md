@@ -2,6 +2,8 @@
 
 Automatically set your keyboard's backlight based on your Mac's ambient light sensor.
 
+<img src="./Assets/screenshot.png" width="512">
+
 ## Compatibility
 
 **macOS Big Sur or later and a Mac with a built-in ambient light sensor.**
