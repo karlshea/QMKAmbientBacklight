@@ -56,38 +56,39 @@ struct SettingsView: View {
         
         let evaluator = QABBacklightLevelEvaluator(adjustments: settings.currentKeyboardAdjustments)
         
-        return VStack(alignment: .leading, spacing: 32) {
+        return VStack(alignment: .leading, spacing: 12) {
+            
             Toggle(
                 "Launch at Login",
                 isOn: $settings.isLaunchAtLoginEnabled
             )
             
-            Group {
-                VStack(alignment: .leading, spacing: 2) {
+            GroupBox(label: Text("Keyboard")) {
+                VStack(alignment: .leading, spacing: 8) {
                     HStack(alignment: .firstTextBaseline) {
                         Text("Vendor ID")
                         TextField("Vendor ID", text: $settings.keyboardVendorId)
-                            
                     }
-                    
+
                     HStack(alignment: .firstTextBaseline) {
                         Text("Product ID")
                         TextField("Product ID", text: $settings.keyboardProductId)
                     }
-                }
-            }
+                }.padding()
+            }.frame(maxWidth: .infinity)
             
-            Group {
+            
+            GroupBox(label: Text("Ambient Light")) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Lux considered maximum:")
-                
+
                     HStack(alignment: .firstTextBaseline) {
                         Slider(value: luxMaxProxy, in: 0...2000)
                             .frame(maxWidth: 300)
                         Text("\(settings.luxValueConsideredMaximum)")
                             .font(Font.system(size: 12, weight: .medium).monospacedDigit())
                     }
-                    
+
                     HStack(alignment: .firstTextBaseline) {
                         Text("Current Ambient Light Lux:")
                         Text("\(reader.ambientLightValue.formattedNoFractionDigits)")
@@ -95,30 +96,34 @@ struct SettingsView: View {
                     }
                     .font(.system(size: 12))
                     .foregroundColor(Color(NSColor.secondaryLabelColor))
-                }
+                }.padding()
             }
+            
                 
-            Group {
+            GroupBox(label: Text("Backlight")) {
                 VStack(alignment: .leading, spacing: 2) {
-                
-                    Text("Minimum backlight level:")
                     
-                    HStack(alignment: .firstTextBaseline) {
-                        Slider(value: minLevelProxy, in: 0...255)
-                            .frame(maxWidth: 300)
-                        Text("\(settings.minimumLevel)")
-                            .font(Font.system(size: 12, weight: .medium).monospacedDigit())
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Minimum backlight level:")
+                        HStack(alignment: .firstTextBaseline) {
+                            Slider(value: minLevelProxy, in: 0...255)
+                                .frame(maxWidth: 300)
+                            Text("\(settings.minimumLevel)")
+                                .font(Font.system(size: 12, weight: .medium).monospacedDigit())
+                        }
                     }
-                    
-                    Text("Maximum backlight level:")
-                    
-                    HStack(alignment: .firstTextBaseline) {
-                        Slider(value: maxLevelProxy, in: 0...255)
-                            .frame(maxWidth: 300)
-                        Text("\(settings.maximumLevel)")
-                            .font(Font.system(size: 12, weight: .medium).monospacedDigit())
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Maximum backlight level:")
+
+                        HStack(alignment: .firstTextBaseline) {
+                            Slider(value: maxLevelProxy, in: 0...255)
+                                .frame(maxWidth: 300)
+                            Text("\(settings.maximumLevel)")
+                                .font(Font.system(size: 12, weight: .medium).monospacedDigit())
+                        }
                     }
-                    
+
                     HStack(alignment: .firstTextBaseline) {
                         Text("Current Keyboard Level:")
                         Text("\(evaluator.determineLevelForLux(reader.ambientLightValue))")
@@ -126,8 +131,8 @@ struct SettingsView: View {
                     }
                     .font(.system(size: 12))
                     .foregroundColor(Color(NSColor.secondaryLabelColor))
-                }
-            }
+                }.padding()
+            }.frame(maxWidth: .infinity)
         }
     }
 }
@@ -152,7 +157,7 @@ extension Double {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
-            .frame(maxWidth: 385)
+            .frame(maxWidth: 400, minHeight: 520)
             .environmentObject(QABAmbientLightSensorReader(frequency: .realtime))
             .environmentObject(QABSettings(forPreview: true))
             .previewLayout(.sizeThatFits)
