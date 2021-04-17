@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB1AD72B262A96AF003B2879 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = CB1AD72A262A96AF003B2879 /* Sparkle */; };
 		CB3D5F5426252EBC004C824F /* QMKAmbientBacklightCore.h in Headers */ = {isa = PBXBuildFile; fileRef = CB3D5F5226252EBC004C824F /* QMKAmbientBacklightCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CB3D5F6026252ED9004C824F /* BezelServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB3D5F5F26252ED9004C824F /* BezelServices.framework */; };
 		CB3D5F692625302D004C824F /* QABAmbientLightSensor.h in Headers */ = {isa = PBXBuildFile; fileRef = CB3D5F682625302D004C824F /* QABAmbientLightSensor.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB3D5F9C26253499004C824F /* QMKAmbientBacklightCore.framework in Frameworks */,
+				CB1AD72B262A96AF003B2879 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +283,9 @@
 				CB3D5F9F26253499004C824F /* PBXTargetDependency */,
 			);
 			name = QMKAmbientBacklight;
+			packageProductDependencies = (
+				CB1AD72A262A96AF003B2879 /* Sparkle */,
+			);
 			productName = QMKAmbientBacklight;
 			productReference = CB3D5F8126253422004C824F /* QMK Ambient Backlight.app */;
 			productType = "com.apple.product-type.application";
@@ -314,6 +319,7 @@
 			mainGroup = CB3D5F2D26252E46004C824F;
 			packageReferences = (
 				CB3D5FBB262558A5004C824F /* XCRemoteSwiftPackageReference "USBDeviceSwift" */,
+				CB1AD729262A96AF003B2879 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 			productRefGroup = CB3D5F3726252E46004C824F /* Products */;
 			projectDirPath = "";
@@ -653,6 +659,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CB1AD729262A96AF003B2879 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.26.0;
+			};
+		};
 		CB3D5FBB262558A5004C824F /* XCRemoteSwiftPackageReference "USBDeviceSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Arti3DPlayer/USBDeviceSwift.git";
@@ -664,6 +678,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CB1AD72A262A96AF003B2879 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB1AD729262A96AF003B2879 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
 		CB3D5FBC262558A5004C824F /* USBDeviceSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CB3D5FBB262558A5004C824F /* XCRemoteSwiftPackageReference "USBDeviceSwift" */;

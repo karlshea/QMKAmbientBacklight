@@ -8,6 +8,7 @@
 import Cocoa
 import SwiftUI
 import QMKAmbientBacklightCore
+import Sparkle
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -25,6 +26,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationWillFinishLaunching(_ notification: Notification) {
+        SUUpdater.shared()?.delegate = self
+        
         if UserDefaults.standard.bool(forKey: "UseRegularActivationPolicy") {
             NSApp.setActivationPolicy(.regular)
         }
@@ -118,6 +121,18 @@ extension AppDelegate: NSWindowDelegate {
     
     func windowWillClose(_ notification: Notification) {
         window = nil
+    }
+    
+}
+
+extension AppDelegate: SUUpdaterDelegate {
+    
+    func updaterWillRelaunchApplication(_ updater: SUUpdater) {
+        shouldSkipTerminationConfirmation = true
+    }
+    
+    func updater(_ updater: SUUpdater, didCancelInstallUpdateOnQuit item: SUAppcastItem) {
+        shouldSkipTerminationConfirmation = true
     }
     
 }

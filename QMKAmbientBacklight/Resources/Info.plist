@@ -30,5 +30,9 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>SUFeedURL</key>
+	<string>https://su.weilstreet.com/qmk-ambient-backlight/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>ca5mCkvNK/tHlNDSZEMDto0v1ZIcVvaAJrXYA8SraPI=</string>
 </dict>
 </plist>
