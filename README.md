@@ -1,3 +1,5 @@
+<img src="./Assets/icon.png" width="128">
+
 # QMK Ambient Backlight
 
 Automatically set your keyboard's backlight based on your Mac's ambient light sensor.
