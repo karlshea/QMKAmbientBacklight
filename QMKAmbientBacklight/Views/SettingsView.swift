@@ -7,10 +7,26 @@
 
 import SwiftUI
 import QMKAmbientBacklightCore
+import Sparkle
 
 struct SettingsView: View {
     @EnvironmentObject var reader: QABAmbientLightSensorReader
     @EnvironmentObject var settings: QABSettings
+    
+    static var appVersion: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    }
+    
+    static var appBuild: String? {
+        return Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String
+    }
+    
+    static var versionBuild: String {
+        let version = self.appVersion ?? "", build = self.appBuild ?? ""
+        
+        return version == build ? "v\(version)" : "v\(version) (\(build))"
+    }
+    
     
     var body: some View {
         Group {
@@ -97,7 +113,7 @@ struct SettingsView: View {
                     .font(.system(size: 12))
                     .foregroundColor(Color(NSColor.secondaryLabelColor))
                 }.padding()
-            }
+            }.frame(maxWidth: .infinity)
             
                 
             GroupBox(label: Text("Backlight")) {
@@ -133,6 +149,17 @@ struct SettingsView: View {
                     .foregroundColor(Color(NSColor.secondaryLabelColor))
                 }.padding()
             }.frame(maxWidth: .infinity)
+            
+            HStack(alignment: .firstTextBaseline) {
+                Text(SettingsView.versionBuild)
+                    .font(Font.system(size: 12))
+                    .foregroundColor(Color(NSColor.secondaryLabelColor))
+                Spacer()
+                Button("Check for Updates", action: {
+                    SUUpdater.shared()?.checkForUpdates(self)
+                })
+                    .font(Font.system(size: 12))
+            }
         }
     }
 }
@@ -157,7 +184,7 @@ extension Double {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
-            .frame(maxWidth: 400, minHeight: 520)
+            .frame(maxWidth: 400, minHeight: 540)
             .environmentObject(QABAmbientLightSensorReader(frequency: .realtime))
             .environmentObject(QABSettings(forPreview: true))
             .previewLayout(.sizeThatFits)
