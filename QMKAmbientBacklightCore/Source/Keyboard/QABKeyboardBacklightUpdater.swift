@@ -58,10 +58,12 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
             return
         }
         
-        keyboardMonitor = QABKeyboardMonitor(vendorId: vendorId, productId: productId, usagePage: settings.keyboardUsagePage, usage: settings.keyboardUsage)
+        if let keyboardMonitor = keyboardMonitor {
+            keyboardMonitor.stop()
+        }
         
-        let monitorDaemon = Thread(target: self.keyboardMonitor!, selector: #selector(self.keyboardMonitor!.initializeMonitor), object: nil)
-        monitorDaemon.start()
+        keyboardMonitor = QABKeyboardMonitor(vendorId: vendorId, productId: productId, usagePage: settings.keyboardUsagePage, usage: settings.keyboardUsage)
+        keyboardMonitor?.start()
     }
     
     private func setupUpdateBacklightOnWake() {

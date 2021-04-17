@@ -10,16 +10,17 @@ import Combine
 import os.log
 import USBDeviceSwift
 
-open class QABKeyboardMonitor {
+open class QABKeyboardMonitor: NSObject {
     
     private let vendorId: UInt16
     private let productId: UInt16
     private let usagePage: UInt16
     private let usage: UInt8
     
-    private let log = OSLog(subsystem: kQMKAmbientBacklightCoreSubsystemName, category: String(describing: QABKeyboardMonitor.self))
+    private var ioManagerRef: IOHIDManager!
+    private var keyboard: QABKeyboard?
     
-    public var keyboard: QABKeyboard?
+    private let log = OSLog(subsystem: kQMKAmbientBacklightCoreSubsystemName, category: String(describing: QABKeyboardMonitor.self))
     
     public var requestedBacklightLevel: UInt8 = 0 {
         didSet {
@@ -40,7 +41,21 @@ open class QABKeyboardMonitor {
         self.usage = usage
     }
     
+    func start() {
+        initializeMonitor()
+    }
+    
+    func stop() {
+        os_log("Stopping monitor for %02X %02X", log: log, type: .debug, vendorId, productId)
+
+        let rl = RunLoop.current.getCFRunLoop()
+        IOHIDManagerUnscheduleFromRunLoop(ioManagerRef, rl, CFRunLoopMode.defaultMode.rawValue)
+        IOHIDManagerClose(ioManagerRef, IOOptionBits(kIOHIDOptionsTypeNone))
+    }
+    
     @objc open func initializeMonitor() {
+        let rl = RunLoop.current.getCFRunLoop()
+        
         let match: [String: Any] = [
             kIOHIDVendorIDKey: vendorId,
             kIOHIDProductIDKey: productId,
@@ -50,20 +65,18 @@ open class QABKeyboardMonitor {
 
         os_log("Initializing keyboard monitor for %02X %02X", log: log, type: .debug, vendorId, productId)
 
-        let managerRef = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
+        ioManagerRef = IOHIDManagerCreate(kCFAllocatorDefault, IOOptionBits(kIOHIDOptionsTypeNone))
 
-        IOHIDManagerSetDeviceMatching(managerRef, match as CFDictionary)
-        IOHIDManagerScheduleWithRunLoop(managerRef, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue);
-        IOHIDManagerOpen(managerRef, IOOptionBits(kIOHIDOptionsTypeNone))
+        IOHIDManagerSetDeviceMatching(ioManagerRef, match as CFDictionary)
+        IOHIDManagerScheduleWithRunLoop(ioManagerRef, rl, CFRunLoopMode.defaultMode.rawValue);
+        IOHIDManagerOpen(ioManagerRef, IOOptionBits(kIOHIDOptionsTypeNone))
 
         let matchingCallback: IOHIDDeviceCallback = { inContext, inResult, inSender, inIOHIDDeviceRef in
             let this: QABKeyboardMonitor = unsafeBitCast(inContext, to: QABKeyboardMonitor.self)
             this.rawDeviceAdded(inResult, inSender: inSender!, inIOHIDDeviceRef: inIOHIDDeviceRef)
         }
 
-        IOHIDManagerRegisterDeviceMatchingCallback(managerRef, matchingCallback, unsafeBitCast(self, to: UnsafeMutableRawPointer.self))
-        
-        RunLoop.current.run()
+        IOHIDManagerRegisterDeviceMatchingCallback(ioManagerRef, matchingCallback, unsafeBitCast(self, to: UnsafeMutableRawPointer.self))
     }
     
     open func rawDeviceAdded(_ inResult: IOReturn, inSender: UnsafeMutableRawPointer, inIOHIDDeviceRef: IOHIDDevice!) {
