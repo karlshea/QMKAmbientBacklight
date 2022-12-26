@@ -19,16 +19,18 @@ public final class QABKeyboard {
     }
     
     public func setBacklightLevel(_ level: UInt8) {
-        let commandSetLighting: UInt8 = 0x07
-        let lightingBrightness: UInt8 = 0x09
+        let commandId: UInt8 = 0x07         // via_command_id.id_custom_set_value
+        let channelId: UInt8 = 1            // via_channel_id.id_qmk_backlight_channel
+        let backlightBrightness: UInt8 = 1  // via_qmk_backlight_value.id_qmk_backlight_brightness
         
         let commandData = Data([
-            lightingBrightness,
+            channelId,
+            backlightBrightness,
             level
         ])
         
         var byteArray = [UInt8](commandData)
-        let reportId: UInt8 = commandSetLighting
+        let reportId: UInt8 = commandId
         byteArray.insert(reportId, at: 0)
         byteArray.append(0)
         

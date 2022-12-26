@@ -18,39 +18,36 @@
 #    endif
 
 void via_qmk_backlight_set_value(uint8_t *data) {
+    // data = [ value_id, value_data ]
     uint8_t *value_id   = &(data[0]);
     uint8_t *value_data = &(data[1]);
     switch (*value_id) {
         case id_qmk_backlight_brightness: {
             // level / 255 * BACKLIGHT_LEVELS
-            backlight_level_noeeprom(((uint16_t)value_data[0]) * BACKLIGHT_LEVELS / 255);
+            backlight_level_noeeprom(((uint16_t)value_data[0]) * BACKLIGHT_LEVELS / UINT8_MAX);
             break;
         }
     }
 }
 #endif  // BACKLIGHT_ENABLE
 
+
 void raw_hid_receive(uint8_t *data, uint8_t length) {
     uint8_t *command_id   = &(data[0]);
     uint8_t *command_data = &(data[1]);
-    switch (*command_id) {
+    uint8_t *value_id_and_data = &(data[2]);
 
-        case id_lighting_set_value: {
 #if defined(BACKLIGHT_ENABLE)
-            via_qmk_backlight_set_value(command_data);
-#endif
-#if !defined(BACKLIGHT_ENABLE)
-            // Return the unhandled state
-            *command_id = id_unhandled;
-#endif
-            break;
-        }
+    // data = [ command_id, channel_id, value_id, value_data ]
 
-        default: {
-            *command_id = id_unhandled;
-            break;
-        }
+    if (*command_id == id_custom_set_value &&
+        *command_data == id_qmk_backlight_channel) {
+        via_qmk_backlight_set_value(value_id_and_data);
+        return;
     }
+#endif // BACKLIGHT_ENABLE
+
+    *command_id = id_unhandled;
 }
 
 #endif // not VIA_ENABLE
