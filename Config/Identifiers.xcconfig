@@ -1,0 +1,2 @@
+// Change to your reverse DNS to build locally without conflicts.
+QAB_BUNDLE_ID_PREFIX=com.weilstreet.

@@ -79,6 +79,10 @@
 		CB3D5FB826255794004C824F /* QABKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboard.swift; sourceTree = "<group>"; };
 		CB3FFE882628BEA50048F4BA /* QABKeyboardAdjustments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboardAdjustments.swift; sourceTree = "<group>"; };
 		CB3FFE8B2628C1BB0048F4BA /* QABBacklightLevelEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABBacklightLevelEvaluator.swift; sourceTree = "<group>"; };
+		CB4A63E0295A2EFD00BF326F /* Versions.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Versions.xcconfig; sourceTree = "<group>"; };
+		CB4A63E1295A2EFD00BF326F /* _MAIN_.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = _MAIN_.xcconfig; sourceTree = "<group>"; };
+		CB4A63E2295A2EFD00BF326F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		CB4A63E3295A2EFD00BF326F /* Identifiers.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Identifiers.xcconfig; sourceTree = "<group>"; };
 		CBED3A492627DDF000397C48 /* QABKeyboardSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QABKeyboardSettings.swift; sourceTree = "<group>"; };
 		CBED3A4D2627FB5600397C48 /* SharedFileList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedFileList.m; sourceTree = "<group>"; };
 		CBED3A4E2627FB5600397C48 /* SharedFileList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedFileList.h; sourceTree = "<group>"; };
@@ -111,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				CB1865E6295A1FC400578C54 /* README.md */,
+				CB4A63DF295A2ED100BF326F /* Config */,
 				CB3D5F8226253423004C824F /* QMKAmbientBacklight */,
 				CB3D5F5126252EBC004C824F /* QMKAmbientBacklightCore */,
 				CB3D5F3726252E46004C824F /* Products */,
@@ -223,6 +228,17 @@
 				CB3FFE8B2628C1BB0048F4BA /* QABBacklightLevelEvaluator.swift */,
 			);
 			path = Keyboard;
+			sourceTree = "<group>";
+		};
+		CB4A63DF295A2ED100BF326F /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				CB4A63E1295A2EFD00BF326F /* _MAIN_.xcconfig */,
+				CB4A63E2295A2EFD00BF326F /* Debug.xcconfig */,
+				CB4A63E3295A2EFD00BF326F /* Identifiers.xcconfig */,
+				CB4A63E0295A2EFD00BF326F /* Versions.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		CBED3A4C2627FB3900397C48 /* Utilities */ = {
@@ -407,6 +423,7 @@
 /* Begin XCBuildConfiguration section */
 		CB3D5F4426252E46004C824F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB4A63E1295A2EFD00BF326F /* _MAIN_.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -448,10 +465,6 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -470,6 +483,7 @@
 		};
 		CB3D5F4526252E46004C824F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB4A63E1295A2EFD00BF326F /* _MAIN_.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -526,10 +540,10 @@
 		};
 		CB3D5F5A26252EBC004C824F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB4A63E2295A2EFD00BF326F /* Debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -543,7 +557,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.weilstreet.QMKAmbientBacklightCore;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(QAB_BUNDLE_ID_PREFIX)QMKAmbientBacklightCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -552,8 +566,6 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
@@ -562,7 +574,6 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -576,7 +587,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.weilstreet.QMKAmbientBacklightCore;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(QAB_BUNDLE_ID_PREFIX)QMKAmbientBacklightCore";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -584,31 +595,30 @@
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
 				);
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
 		CB3D5F8F26253424004C824F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB4A63E2295A2EFD00BF326F /* Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMKAmbientBacklight/Resources/QMKAmbientBacklight.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = QMKAmbientBacklight/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.weilstreet.QMKAmbientBacklight;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(QAB_BUNDLE_ID_PREFIX)QMKAmbientBacklightCore";
 				PRODUCT_NAME = "QMK Ambient Backlight";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -616,21 +626,22 @@
 		CB3D5F9026253424004C824F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = QMKAmbientBacklight/Resources/QMKAmbientBacklight.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = QMKAmbientBacklight/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = com.weilstreet.QMKAmbientBacklight;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(QAB_BUNDLE_ID_PREFIX)QMKAmbientBacklightCore";
 				PRODUCT_NAME = "QMK Ambient Backlight";
 				SWIFT_VERSION = 5.0;
 			};
