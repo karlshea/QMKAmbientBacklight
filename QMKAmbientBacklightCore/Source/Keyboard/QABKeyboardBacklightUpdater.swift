@@ -48,6 +48,8 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
             self?.reset()
         }.store(in: &cancellables)
         
+        setupUpdateBacklightOnWake()
+        
         reader.activate()
     }
 
