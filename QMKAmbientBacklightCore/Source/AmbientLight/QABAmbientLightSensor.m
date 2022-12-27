@@ -26,8 +26,6 @@ extern IOHIDServiceClientRef ALCALSCopyALSServiceClient(void);
 
 @interface QABAmbientLightSensor ()
 
-@property (nonatomic, readonly) IOHIDEventRef event;
-
 @property (nonatomic, assign) double value;
 
 @property (nonatomic, strong) NSTimer *updateTimer;
@@ -57,7 +55,7 @@ extern IOHIDServiceClientRef ALCALSCopyALSServiceClient(void);
     return self;
 }
 
-- (IOHIDEventRef)event
+- (IOHIDEventRef)copyHIDEvent
 {
     if (!_client) _client = ALCALSCopyALSServiceClient();
     
@@ -75,12 +73,16 @@ extern IOHIDServiceClientRef ALCALSCopyALSServiceClient(void);
 
 - (void)_read
 {
-    if (!self.event) {
+    IOHIDEventRef event = [self copyHIDEvent];
+    
+    if (!event) {
         [self _readLegacy];
         return;
     }
     
-    self.value = IOHIDEventGetFloatValue(self.event, IOHIDEventFieldBase(kAmbientLightSensorEvent));
+    self.value = IOHIDEventGetFloatValue(event, IOHIDEventFieldBase(kAmbientLightSensorEvent));
+    
+    CFRelease(event);
 }
 
 - (void)_initializeLegacySensorObject
@@ -155,11 +157,20 @@ extern IOHIDServiceClientRef ALCALSCopyALSServiceClient(void);
     [self _tearDownUpdateTimer];
 }
 
+- (BOOL)_canGetHIDEvent
+{
+    IOHIDEventRef event = [self copyHIDEvent];
+    BOOL eventOK = event != NULL;
+    if (event) CFRelease(event);
+    return eventOK;
+}
+
+
 - (BOOL)isPresent
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"DMBFakeSensorSupported"]) return YES;
     
-    return self.event != NULL || _legacySensorInitializedSuccessfully;
+    return [self _canGetHIDEvent] || _legacySensorInitializedSuccessfully;
 }
 
 + (BOOL)hardwareUsesLegacySensor
@@ -192,7 +203,6 @@ extern IOHIDServiceClientRef ALCALSCopyALSServiceClient(void);
 {
     [self _tearDownUpdateTimer];
     if (_client) CFRelease(_client);
-    if (_event) CFRelease(_event);
     if (_legacySensorInitializedSuccessfully) IOConnectRelease(_legacySensorDataPort);
 }
 
