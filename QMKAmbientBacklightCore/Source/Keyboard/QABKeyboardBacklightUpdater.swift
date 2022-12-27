@@ -95,6 +95,8 @@ public final class QABKeyboardBacklightUpdater: ObservableObject {
     }
     
     private func evaluateAmbientLight(with value: Double) {
+        guard value != -1 else { return }
+        
         let evaluator = QABBacklightLevelEvaluator(adjustments: self.currentKeyboardAdjustments)
         
         setKeyboardBacklightLevel(evaluator.determineLevelForLux(value))
